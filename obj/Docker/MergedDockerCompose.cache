@@ -1,0 +1,61 @@
+name: dockercompose744825057098599780
+services:
+  client:
+    build:
+      context: C:\Users\Wrouk\source\repos\WebApplication2\my-app
+      dockerfile: Dockerfile
+    image: client
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 3000
+      published: "5001"
+      protocol: tcp
+  db:
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: 1Secure*Password1
+    image: mcr.microsoft.com/mssql/server:2017-latest
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 1433
+      published: "1433"
+      protocol: tcp
+  proxy:
+    image: nginx:mainline
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "80"
+      protocol: tcp
+    volumes:
+    - type: bind
+      source: C:\Users\Wrouk\source\repos\WebApplication2\nginx.conf
+      target: /etc/nginx/nginx.conf
+      bind:
+        create_host_path: true
+  webapplication2:
+    build:
+      context: C:\Users\Wrouk\source\repos\WebApplication2
+      dockerfile: WebApplication2/Dockerfile
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+    image: webapplication2
+    networks:
+      default: null
+    ports:
+    - mode: ingress
+      target: 80
+      published: "5000"
+      protocol: tcp
+networks:
+  default:
+    name: dockercompose744825057098599780_default
