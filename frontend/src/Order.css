@@ -1,0 +1,12 @@
+input{
+    margin-left: 20px;
+}
+label{
+    padding: 10px;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+}
